@@ -1,0 +1,19 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.input-field {
+  @apply w-full rounded-md border-0 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-primary sm:text-sm sm:leading-6 appearance-none h-[44px] border-[#CFCFCF] py-2 px-4 leading-tight focus:outline-none focus:bg-white;
+}
+
+.btn {
+  @apply rounded-lg bg-primary p-3 text-center text-base font-semibold text-white shadow-md outline-none ring-primary ring-offset-2 transition hover:bg-primary focus:ring-2 flex gap-2 items-center justify-center;
+}
+
+.btn-disabled {
+  @apply rounded-lg bg-primary opacity-70 p-3 text-center text-base font-semibold text-white shadow-md outline-none ring-primary ring-offset-2 transition hover:bg-primary focus:ring-2 flex gap-2 items-center justify-center;
+}
+
+.btn-success {
+  @apply rounded-lg bg-green-700 p-3 text-center text-base font-semibold text-white shadow-md outline-none ring-green-700 ring-offset-2 transition hover:bg-green-700 focus:ring-2 flex gap-2 items-center justify-center;
+}

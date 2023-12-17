@@ -1,20 +1,24 @@
 import { API } from "../utils/httpHeader";
 
-export const getUsers = (obj) => {
+export const getUsers = async (obj) => {
   const params = obj.queryKey[1];
-  return API.get("/users", { params });
+  return await API.get("/users", { params });
 };
 
-export const getUserById = (obj) => {
+export const getUserById = async (obj) => {
   const id = obj.queryKey[1];
-  return API.get(`/users/${id}`);
+  return await API.get(`/users/${id}`);
 };
 
-export const addUser = (user) => {
-  return API.post("/users", user);
+export const addUser = async (user) => {
+  return await API.post("/users", user);
 };
 
-export const deleteUser = (id) => {
-  console.log(id);
-  return API.delete(`/users/${id}`);
+export const editUser = async (user) => {
+  console.log(user);
+  return await API.patch(`/users/${user._id}`, user);
+};
+
+export const deleteUser = async (id) => {
+  return await API.delete(`/users/${id}`);
 };

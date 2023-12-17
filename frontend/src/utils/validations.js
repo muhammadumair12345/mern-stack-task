@@ -13,8 +13,17 @@ export const signInValidationSchema = yup.object().shape({
 });
 
 //User
-export const userAddValidationSchema = yup.object().shape({
-  email: yup.string().required("Email is required"),
+export const userValidationSchema = yup.object().shape({
+  name: yup.string().required("Name is required"),
+  email: yup.string().email("Invalid email").required("Email is required"),
+  addresses: yup.array().of(
+    yup.object().shape({
+      addressLine1: yup.string().required("Address Line 1 is required"),
+      city: yup.string().required("City is required"),
+      state: yup.string().required("State is required"),
+      country: yup.string().required("Country is required"),
+    })
+  ),
   role: yup.string().required("Role is required"),
-  password: yup.string().required("Password is required"),
+  phoneNo: yup.string().required("Phone No is required"),
 });

@@ -1,5 +1,5 @@
 import { API } from "../utils/httpHeader";
 
-export const signin = (authData) => {
-  return API.post("/auth/signin", authData);
+export const signin = async (authData) => {
+  return await API.post("/auth/signin", authData);
 };

@@ -10,11 +10,12 @@ import { FaTrash } from "react-icons/fa";
 import { addUser, editUser } from "../../services/users";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
+import { failure, success } from "../../utils/notifications";
 
 const defaultValues = {
   name: "",
   email: "",
-  role: "",
+  role: "admin",
   phoneNo: "",
   addresses: [
     {
@@ -31,13 +32,21 @@ const AddEditForm = () => {
   const { id } = useParams();
   const queryClient = useQueryClient();
   const { mutate: addUserMutation } = useMutation({
-    queryFn: addUser,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["users", {}] }),
+    mutationFn: addUser,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["users", {}] });
+      success("User added successfully");
+    },
+    onError: (error) => failure(error.message),
   });
 
   const { mutate: updateUserMutation } = useMutation({
-    queryFn: editUser,
-    onSuccess: () => queryClient.invalidateQueries({ queryKey: ["users", {}] }),
+    mutationFn: editUser,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["users", {}] });
+      success("User has been updated");
+    },
+    onError: (error) => failure(error.message),
   });
 
   const {

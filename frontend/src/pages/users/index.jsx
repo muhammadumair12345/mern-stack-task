@@ -4,7 +4,8 @@ import Table from "../../components/global/Table";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getUsers, deleteUser } from "../../services/users";
 import { useQueryString } from "../../hooks/useQueryString";
-import { confirmation } from "../../utils/notifications";
+import { confirmation, failure, success } from "../../utils/notifications";
+import { Link } from "react-router-dom";
 
 const tableHeadings = ["Name", "Email", "Role", "Phone No.", "Actions"];
 
@@ -17,9 +18,12 @@ const Users = () => {
     queryFn: getUsers,
   });
   const { mutate: deleteUserMutation } = useMutation({
-    queryFn: deleteUser,
-    onSuccess: () =>
-      queryClient.invalidateQueries({ queryKey: ["users", params] }),
+    mutationFn: deleteUser,
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["users", params] });
+      success("User has been updated");
+    },
+    onError: (error) => failure(error.message),
   });
 
   const handleDelete = (id) => {
@@ -52,6 +56,18 @@ const Users = () => {
               >
                 Delete
               </button>
+              <Link
+                href={`/edit/${user._id}`}
+                className="text-red-600 hover:text-red-900"
+              >
+                Edit
+              </Link>
+              <Link
+                href={`/${user._id}`}
+                className="text-red-600 hover:text-red-900"
+              >
+                View
+              </Link>
             </td>
           </tr>
         ))}

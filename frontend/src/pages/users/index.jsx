@@ -21,7 +21,7 @@ const Users = () => {
     mutationFn: deleteUser,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users", params] });
-      success("User has been updated");
+      success("User deleted successfully");
     },
     onError: (error) => failure(error.message),
   });

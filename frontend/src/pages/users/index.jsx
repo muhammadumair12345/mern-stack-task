@@ -41,36 +41,47 @@ const Users = () => {
         isLoading={isFetching}
         tableHeadings={tableHeadings}
       >
-        {users?.data?.data?.items?.map((user) => (
-          <tr key={user?._id}>
-            <td className="px-6 py-3">{user?.name}</td>
-            <td className="px-6 py-3">{user?.email}</td>
-            <td className="px-6 py-3">{user?.role}</td>
+        {users?.data?.data?.items > 0 ? (
+          users?.data?.data?.items?.map((user) => (
+            <tr key={user?._id}>
+              <td className="px-6 py-3">{user?.name}</td>
+              <td className="px-6 py-3">{user?.email}</td>
+              <td className="px-6 py-3">{user?.role}</td>
 
-            <td className="px-6 py-3">{user?.phoneNo}</td>
-            <td className="px-6 py-3">
-              <button
-                type="button"
-                onClick={() => handleDelete(user?._id)}
-                className="text-red-600 hover:text-red-900"
-              >
-                Delete
-              </button>
-              <Link
-                href={`/edit/${user._id}`}
-                className="text-red-600 hover:text-red-900"
-              >
-                Edit
-              </Link>
-              <Link
-                href={`/${user._id}`}
-                className="text-red-600 hover:text-red-900"
-              >
-                View
-              </Link>
+              <td className="px-6 py-3">{user?.phoneNo}</td>
+              <td className="px-6 py-3 flex gap-2">
+                <button
+                  type="button"
+                  onClick={() => handleDelete(user?._id)}
+                  className="text-red-600 hover:text-red-900"
+                >
+                  Delete
+                </button>
+                <Link
+                  href={`/edit/${user._id}`}
+                  className="text-red-600 hover:text-red-900"
+                >
+                  Edit
+                </Link>
+                <Link
+                  href={`/${user._id}`}
+                  className="text-red-600 hover:text-red-900"
+                >
+                  View
+                </Link>
+              </td>
+            </tr>
+          ))
+        ) : (
+          <tr>
+            <td
+              colSpan={tableHeadings.length + 1}
+              className="font-bold text-primary text-xl text-center p-8"
+            >
+              No User Found
             </td>
           </tr>
-        ))}
+        )}
       </Table>
     </Container>
   );

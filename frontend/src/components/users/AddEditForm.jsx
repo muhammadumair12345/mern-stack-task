@@ -7,8 +7,8 @@ import Button from "../global/Button";
 import Form from "../global/Form";
 import Box from "../global/Box";
 import { FaTrash } from "react-icons/fa";
-import { addUser, editUser } from "../../services/users";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { addUser, editUser, getUserById } from "../../services/users";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useParams } from "react-router-dom";
 import { failure, success } from "../../utils/notifications";
 
@@ -31,7 +31,16 @@ const defaultValues = {
 const AddEditForm = () => {
   const { id } = useParams();
   const queryClient = useQueryClient();
-  const { mutate: addUserMutation } = useMutation({
+  const {
+    data: user,
+    isFetching,
+    isSuccess,
+  } = useQuery({
+    queryKey: ["users", id],
+    queryFn: getUserById,
+    enabled: id !== undefined,
+  });
+  const { mutate: addUserMutation, isPending: isAddPending } = useMutation({
     mutationFn: addUser,
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["users", {}] });
@@ -40,14 +49,15 @@ const AddEditForm = () => {
     onError: (error) => failure(error.message),
   });
 
-  const { mutate: updateUserMutation } = useMutation({
-    mutationFn: editUser,
-    onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["users", {}] });
-      success("User has been updated");
-    },
-    onError: (error) => failure(error.message),
-  });
+  const { mutate: updateUserMutation, isPending: isUpdatePending } =
+    useMutation({
+      mutationFn: editUser,
+      onSuccess: () => {
+        queryClient.invalidateQueries({ queryKey: ["users", {}] });
+        success("User has been updated");
+      },
+      onError: (error) => failure(error.message),
+    });
 
   const {
     register,
@@ -56,6 +66,7 @@ const AddEditForm = () => {
     control,
   } = useForm({
     defaultValues,
+    value: !isFetching && isSuccess && user?.data?.data,
     resolver: yupResolver(userValidationSchema),
   });
 
@@ -156,7 +167,12 @@ const AddEditForm = () => {
       <Button type="button" onClick={() => append({})}>
         Add More Address
       </Button>
-      <Button type="submit">Submit</Button>
+      <Button
+        type="submit"
+        isLoading={id !== undefined ? isUpdatePending : isAddPending}
+      >
+        {id !== undefined ? "Update User" : "Add User"}
+      </Button>
     </Form>
   );
 };

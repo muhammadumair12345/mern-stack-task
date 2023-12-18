@@ -29,11 +29,8 @@ export const createUser = async (req, res) => {
 
     if (!existingUser.role)
       return res.error({ message: "Role does not exist yet." });
-
-    const newUser = new User({
-      ...user,
-      password: hashPassword,
-    });
+    console.log("user", user);
+    const newUser = new User(user);
     await newUser.save();
 
     res.success({
@@ -47,9 +44,9 @@ export const createUser = async (req, res) => {
 
 export const updateUser = async (req, res) => {
   try {
-    const id = req.params.id;
+    const _id = req.params.id;
     const user = req.body;
-    if (!mongoose.Types.ObjectId.isValid(id))
+    if (!mongoose.Types.ObjectId.isValid(_id))
       return res.error({
         statusCode: statusCodes.NOT_FOUND,
         message: "No user with  that id",
@@ -60,11 +57,11 @@ export const updateUser = async (req, res) => {
       if (!role) return res.error({ message: "Role does not exist yet." });
     }
 
-    const updateUser = await User.findByIdAndUpdate(id, user, {
+    await User.findByIdAndUpdate(_id, user, {
       new: true,
     });
 
-    res.success({ message: "User updated successfully", data: updateUser });
+    res.success({ message: "User updated successfully" });
   } catch (error) {
     res.error({ message: error.message });
   }
@@ -88,7 +85,8 @@ export const deleteUser = async (req, res) => {
 
 export const getUserById = async (req, res) => {
   try {
-    const user = await User.findById(req.params.id).select("-password");
+    const _id = req.params.id;
+    const user = await User.findById(_id).select("-password");
     if (!user) return res.error({ message: "User not found" });
     res.success({ message: "User by ID", data: user });
   } catch (error) {

@@ -14,8 +14,8 @@ router.route("/").get(auth("admin"), getUsers).post(auth("admin"), createUser);
 
 router
   .route("/:id")
-  .get(auth(), getUserById)
-  .patch(auth(), updateUser)
+  .get(auth("admin"), getUserById)
+  .patch(auth("admin"), updateUser)
   .delete(auth("admin"), deleteUser);
 
 export default router;

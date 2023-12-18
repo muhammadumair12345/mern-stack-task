@@ -13,7 +13,7 @@ const Users = () => {
   const searchParams = useQueryString();
   const params = searchParams.getAll();
   const queryClient = useQueryClient();
-  const { data: users, isFetching } = useQuery({
+  const { data: users, isLoading } = useQuery({
     queryKey: ["users", params],
     queryFn: getUsers,
   });
@@ -38,10 +38,10 @@ const Users = () => {
     <Container title={"Users"}>
       <Table
         tname={"users"}
-        isLoading={isFetching}
+        isLoading={isLoading}
         tableHeadings={tableHeadings}
       >
-        {users?.data?.data?.items > 0 ? (
+        {users?.data?.data?.items !== 0 ? (
           users?.data?.data?.items?.map((user) => (
             <tr key={user?._id}>
               <td className="px-6 py-3">{user?.name}</td>
@@ -58,13 +58,13 @@ const Users = () => {
                   Delete
                 </button>
                 <Link
-                  href={`/edit/${user._id}`}
+                  to={`/edit/${user._id}`}
                   className="text-red-600 hover:text-red-900"
                 >
                   Edit
                 </Link>
                 <Link
-                  href={`/${user._id}`}
+                  to={`/${user._id}`}
                   className="text-red-600 hover:text-red-900"
                 >
                   View

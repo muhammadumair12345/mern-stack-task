@@ -27,9 +27,6 @@ export const createUser = async (req, res) => {
     const existingUser = await User.findOne({ email });
     if (existingUser) return res.error({ message: "Email already exists" });
 
-    if (!existingUser.role)
-      return res.error({ message: "Role does not exist yet." });
-    console.log("user", user);
     const newUser = new User(user);
     await newUser.save();
 
@@ -51,11 +48,6 @@ export const updateUser = async (req, res) => {
         statusCode: statusCodes.NOT_FOUND,
         message: "No user with  that id",
       });
-
-    if (user.role) {
-      const role = await User.find({ role: user.role });
-      if (!role) return res.error({ message: "Role does not exist yet." });
-    }
 
     await User.findByIdAndUpdate(_id, user, {
       new: true,

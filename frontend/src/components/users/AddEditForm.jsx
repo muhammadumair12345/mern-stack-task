@@ -9,7 +9,7 @@ import Box from "../global/Box";
 import { FaTrash } from "react-icons/fa";
 import { addUser, editUser, getUserById } from "../../services/users";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { failure, success } from "../../utils/notifications";
 
 const defaultValues = {
@@ -30,12 +30,9 @@ const defaultValues = {
 
 const AddEditForm = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const {
-    data: user,
-    isFetching,
-    isSuccess,
-  } = useQuery({
+  const { data: user, isSuccess } = useQuery({
     queryKey: ["users", id],
     queryFn: getUserById,
     enabled: id !== undefined,
@@ -48,7 +45,6 @@ const AddEditForm = () => {
     },
     onError: (error) => failure(error.message),
   });
-
   const { mutate: updateUserMutation, isPending: isUpdatePending } =
     useMutation({
       mutationFn: editUser,
@@ -64,9 +60,10 @@ const AddEditForm = () => {
     handleSubmit,
     formState: { errors },
     control,
+    reset,
   } = useForm({
-    defaultValues,
-    value: !isFetching && isSuccess && user?.data?.data,
+    defaultValues: isSuccess ? user?.data?.data : defaultValues,
+
     resolver: yupResolver(userValidationSchema),
   });
 
@@ -78,9 +75,11 @@ const AddEditForm = () => {
   const onSubmit = (data) => {
     if (id) {
       updateUserMutation(data);
+      navigate("/");
     } else {
       addUserMutation(data);
     }
+    reset();
   };
 
   return (

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import Box from "../../components/global/Box";
 import Form from "../../components/global/Form";
 import Input from "../../components/global/Input";
@@ -7,12 +7,12 @@ import { signInValidationSchema } from "../../utils/validations";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { useAuth } from "../../contexts/AuthContext";
-import { Navigate, useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const Signin = () => {
   const { signin, isLoading, auth } = useAuth();
   const location = useLocation();
-
+  const navigate = useNavigate();
   const {
     register,
     handleSubmit,
@@ -25,9 +25,11 @@ const Signin = () => {
     signin(formData);
   };
 
-  return auth?.token && location.pathname.includes("signin") ? (
-    <Navigate to="/" />
-  ) : (
+  useEffect(() => {
+    auth?.token && location.pathname.includes("signin") && navigate("/");
+  }, []);
+
+  return (
     <div className="p-4 min-h-screen w-full flex justify-center items-center">
       <div className="flex flex-col gap-8 items-center w-[35rem]">
         <Box className="flex-col justify-center p-4 shadow-md border-t-8 border-primary">
